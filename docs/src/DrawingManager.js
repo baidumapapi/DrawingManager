@@ -628,6 +628,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             instances.push(this);
             
             opts = opts || {};
+            this.overlays = []; // 用来存储覆盖物
 
             this._initialize(map, opts);
         }
@@ -722,6 +723,38 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
      */
     DrawingManager.prototype.disableCalculate = function() {
         this._enableCalculate = false;
+    }
+
+    /** 
+     * 获取所有绘制的覆盖物
+     */
+    DrawingManager.prototype.getOverlays = function() {
+        return this.overlays;
+    }
+
+    /**
+     * 清除指定覆盖物
+     */
+    DrawingManager.prototype.clearOverlay = function(overlay) {
+        var map = this._map;
+        for (var i = 0; i < this.overlays.length; i++) {
+            if (this.overlays[i] === overlay) {
+                map.removeOverlay(overlay);
+                this.overlays.splice(i, 1);
+                return;
+            }
+        }
+    }
+
+    /** 
+     * 清除所有绘制的覆盖物
+     */
+    DrawingManager.prototype.clearOverlays = function() {
+        var map = this._map;
+        this.overlays.forEach(function (overlay) {
+            map.removeOverlay(overlay);
+        });
+        this.overlays.length = 0;
     }
 
     /**
@@ -1025,6 +1058,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             points       = [],   //用户绘制的点
             drawPoint    = null; //实际需要画在地图上的点
             overlay      = null,
+            match      = null,
             isBinded     = false;
 
         /**
@@ -1034,7 +1068,11 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             if(me.controlButton == "right" && (e.button == 1 || e.button==0)){
                 return ;
             }
-            points.push(e.point);
+            var point = e.point;
+            if (match) {
+                point = match;
+            }
+            points.push(point);
             drawPoint = points.concat(points[points.length - 1]);
             if (points.length == 1) {
                 if (me._drawingType == BMAP_DRAWING_POLYLINE) {
@@ -1059,6 +1097,17 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
          * 鼠标移动过程的事件
          */
         var mousemoveAction = function(e) {
+            var point = e.point;
+            if (me._opts.isSorption) {
+                var matchs = me.getSorptionMatch(point, me.overlays);
+                if (matchs && matchs.length > 0) {
+                    match = matchs[0].point;
+                    overlay.setPositionAt(drawPoint.length - 1, matchs[0].point);
+                    return;
+                }
+            }
+            match = null;
+
             overlay.setPositionAt(drawPoint.length - 1, e.point);
         }
 
@@ -1083,6 +1132,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             //console.log(points.length);
             overlay.setPath(points);
             var calculate = me._calculate(overlay, points.pop());
+            me.overlays.push(overlay);
             me._dispatchOverlayComplete(overlay, calculate);
             points.length = 0;
             drawPoint.length = 0;
@@ -1240,6 +1290,57 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         }
         this.dispatchEvent(this._drawingType + 'complete', overlay);
         this.dispatchEvent('overlaycomplete', options);
+    }
+
+    // 判断吸附算法
+    DrawingManager.prototype.getSorptionMatch = function (point, polygons, distance) {
+        distance = distance || 20;
+        var map = this._map;
+        var P = map.pointToPixel(point); // point.pixel;
+        var match = [];
+        for (var j = 0; j < polygons.length; j++) {
+            var pixels = polygons[j].getPath();
+            var first = pixels[0];
+            var last = pixels[pixels.length - 1];
+            if (!first.equals(last)) {
+                pixels.push(pixels[0]);
+            }
+            for (var i = 1; i < pixels.length; i++) {
+                var A = map.pointToPixel(pixels[i - 1]);
+                var B = map.pointToPixel(pixels[i]);
+                var vAP = [P.x - A.x, P.y - A.y];
+                var vAB = [B.x - A.x, B.y - A.y];
+                var vPB = [B.x - P.x, B.y - P.y];
+                var cAPAB = vAP[0] * vAB[0] + vAP[1] * vAB[1];
+                var lAPAB = Math.sqrt(Math.pow(vAP[0], 2) + Math.pow(vAP[1], 2)) * Math.sqrt(Math.pow(vAB[0], 2) + Math.pow(vAB[1], 2));
+                var rPAB = Math.acos(cAPAB / lAPAB);
+                var cABPB = vAB[0] * vPB[0] + vAB[1] * vPB[1];
+                var lABPB = Math.sqrt(Math.pow(vAB[0], 2) + Math.pow(vAB[1], 2)) * Math.sqrt(Math.pow(vPB[0], 2) + Math.pow(vPB[1], 2));
+                var rPBA = Math.acos(cABPB / lABPB);
+                if (rPAB < Math.PI / 2 && rPBA < Math.PI / 2) {
+                    var lAP = Math.sqrt(Math.pow(vAP[0], 2) + Math.pow(vAP[1], 2));
+                    var lAB = Math.sqrt(Math.pow(vAB[0], 2) + Math.pow(vAB[1], 2));
+                    var lAO = Math.cos(rPAB) * lAP;
+                    var pAOAB = lAO / lAB;
+                    var lPO = Math.sin(rPAB) * lAP;
+                    var O = [A.x + vAB[0] * pAOAB, A.y + vAB[1] * pAOAB];
+                    if (lPO < distance) {
+                        match.push({
+                            point: map.pixelToPoint({
+                                x: O[0],
+                                y: O[1]
+                            }),
+                            length: lPO
+                        });
+                    }
+                }
+            }
+        }
+        match.sort(function (a, b) {
+            return a.length - b.length;
+        });
+        var ret = match.length > 0 ? match : null;
+        return ret;
     }
 
     /**

@@ -28,13 +28,13 @@ li{
     line-height:28px;
 }
 </style>
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=1XjLLEhZhQNUzd93EjU5nOGQ"></script>
+<script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=1XjLLEhZhQNUzd93EjU5nOGQ"></script>
 <!--加载鼠标绘制工具-->
 <script type="text/javascript" src="../src/DrawingManager.js"></script>
 <link rel="stylesheet" href="../src/DrawingManager.css" />
 <!--加载检索信息窗口-->
-<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.js"></script>
-<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.css" />
+<script type="text/javascript" src="//api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.js"></script>
+<link rel="stylesheet" href="//api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.css" />
 
 <title>SearchInfoWindow</title>
 </head>
@@ -115,6 +115,7 @@ li{
 
     var drawingManager = new BMapLib.DrawingManager(map, {
         isOpen: false, //是否开启绘制模式
+        isSorption: true, // 绘面吸附功能 
         drawingMode: BMAP_DRAWING_POLYGON, //默认的绘制类型
         enableCalculate: false, //是否开启计算模式
         enableDrawingTool: true, //是否显示工具栏
