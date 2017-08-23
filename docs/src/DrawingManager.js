@@ -1099,7 +1099,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         var mousemoveAction = function(e) {
             var point = e.point;
             if (me._opts.isSorption) {
-                var matchs = me.getSorptionMatch(point, me.overlays);
+                var matchs = me.getSorptionMatch(point, me.overlays, me._opts.sorptionDistance);
                 if (matchs && matchs.length > 0) {
                     match = matchs[0].point;
                     overlay.setPositionAt(drawPoint.length - 1, matchs[0].point);
