@@ -725,6 +725,20 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         this._enableCalculate = false;
     }
 
+    /**
+     * 打开吸附功能
+     */
+    DrawingManager.prototype.enableSorption = function() {
+        this._enableSorption = true;
+    }
+
+    /**
+     * 打开关闭功能
+     */
+    DrawingManager.prototype.disableSorption = function() {
+        this._enableSorption = false;
+    }
+
     /** 
      * 获取所有绘制的覆盖物
      */
@@ -858,11 +872,22 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             map.addControl(drawingTool);
         }
 
+        if (opts.sorptionDistance !== undefined) {
+            this.setSorptionDistance(opts.sorptionDistance);
+        }
+
         //是否计算绘制出的面积 
         if (opts.enableCalculate === true) {
             this.enableCalculate();
         } else {
             this.disableCalculate();
+        }
+
+        // 是否开启吸附功能
+        if (opts.enableSorption === true) {
+            this.enableSorption();
+        } else {
+            this.disableSorption();
         }
 
         /**
@@ -882,6 +907,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         this.setRectangleOptions(opts.rectangleOptions);
         this.controlButton =  opts.controlButton == "right" ? "right" : "left";
 
+    }
+
+    DrawingManager.prototype.setSorptionDistance = function(distance) {
+        this._sorptionDistance = distance || 0;
     }
 
     DrawingManager.prototype.setPolygonOptions = function(options) {
@@ -1118,8 +1147,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
          */
         var mousemoveAction = function(e) {
             var point = e.point;
-            if (me._opts.isSorption) {
-                var matchs = me.getSorptionMatch(point, me.overlays, me._opts.sorptionDistance);
+            if (me._enableSorption) {
+                var matchs = me.getSorptionMatch(point, me.overlays, me._sorptionDistance);
                 if (matchs && matchs.length > 0) {
                     match = matchs[0].point;
                     overlay.setPositionAt(drawPoint.length - 1, matchs[0].point);
