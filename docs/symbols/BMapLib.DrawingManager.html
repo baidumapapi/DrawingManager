@@ -1,0 +1,1303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="generator" content="JsDoc Toolkit" />
+		<script src="/library/static/js/jquery-1.7.1.min.js"></script>
+		<script src="/library/static/js/mapnav.js"></script>
+		<script src="/library/static/js/homeTop.js"></script>
+		<link rel="stylesheet" type="text/css" href="/library/static/css/mapi.css">
+		
+		<title>BMapLibrary - BMapLib.DrawingManager</title>
+
+		<style type="text/css">
+			/* default.css */
+
+body {
+	font-family : "Lucida Grande", Tahoma, Arial, Helvetica, sans-serif;
+	color: #555555;
+	margin: 0;
+	padding: 0;
+	font-size:12px;
+	background:#FFFFFF;
+	width : 100%
+}
+
+a {
+    background: none repeat scroll 0 0 transparent;
+    text-decoration: none;
+}
+
+a:link, a:visited {
+    color: #0082CB;
+}
+
+a:hover{
+	text-decoration : underline;
+}
+
+.header
+{
+	clear: both;
+	background-color: #ccc;
+	padding: 8px;
+}
+
+h1
+{
+	font-size: 150%;
+	font-weight: bold;
+	padding: 0;
+	margin: 1em 0 0 .3em;
+}
+
+hr
+{
+	border: none 0;
+	border-top: 1px solid #BFD2E1;
+	height: 1px;
+}
+
+pre.code
+{
+	display: block;
+	padding: 8px;
+	border: 1px dashed #ccc;
+	background-color : #F0F0F0;
+	color : #0A8021;
+}
+
+pre.code b{
+	color : #555555;
+}
+
+#index
+{
+	float: left;
+	width: 170px;
+	position: absolute;
+	left: 0;
+	background-color: #FFFFFF;
+	padding: 0px;
+	border : 1px solid #BFD2E1;
+	overflow-x: hidden;
+}
+
+#content
+{
+	margin-left: 184px;
+	width: 740px;
+	background-color: #FFFFFF;
+	border : 1px solid #BFD2E1;
+	padding : 0 16px;
+}
+
+.main_content{
+	position:relative;
+	width: 960px;
+	margin: 10px auto;
+	padding: 0;
+	zoom:1;
+}
+
+.classList
+{
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	font-family: arial, sans-serif;
+	font-size: 1em;
+	overflow: hidden;
+}
+
+.classList li
+{
+	padding: 0;
+	margin: 0 0 8px 0;
+}
+
+.summaryTable { width: 100%; }
+
+h1.classTitle
+{
+	font-size:14px;
+	line-height:37px;
+	background-color: #E7F0F5;
+	padding-left: 12px;
+	color: #000
+}
+
+h2 { font-size: 110%; }
+h1.classTitle2 { 
+	font-size:14px;
+	line-height:37px;
+	background-color: #F0F0F0;
+	padding:0 0 0 15px;
+	color: #333333;
+	font-weight: bold;
+	margin: 16px 0 8px;
+}
+caption, div.sectionTitle
+{
+	background-color: #E5EFFB;
+	color: #333333;
+	font-size:14px;
+	font-weight : bold;
+	text-align: left;
+	padding: 5px 10px;
+	border: 1px #C8CCD1 solid;
+	margin-top: 18px;
+}
+
+div.sectionTitle { margin-bottom: 8px; }
+.summaryTable thead { display: none; }
+
+.summaryTable td
+{
+	vertical-align: top;
+	padding: 4px;
+	border-bottom: 1px #C8CCD1 solid;
+	border-right: 1px #C8CCD1 solid;
+}
+
+/*col#summaryAttributes {}*/
+.summaryTable td.attributes
+{
+	border-left: 1px #C8CCD1 solid;
+	width: 230px;
+	text-align: left;
+	padding: 6px 10px;
+}
+
+.summaryTable td.attributesCstor{
+	width: 306px;
+}
+.summaryTable td.attributesEvts{
+	width: 180px;
+}
+.darkBgdTr td{
+	background-color : #F5F9FC;
+}
+
+td.returns, td.attributes, .fixedFont
+{
+	line-height: 15px;
+	color: #0A8021;
+	font-family: consolas, "courier new", monospace
+	font-size: 12px;
+}
+
+.summaryTable td.nameDescription
+{
+	text-align: left;
+	font-size: 12px;
+	line-height: 16px;
+	padding: 6px 10px;
+}
+
+.summaryTable td.description
+{
+	line-height: 16px;
+}
+
+.summaryTable td.returns
+{
+	width: 55px;
+	padding: 6px 10px;
+}
+
+.summaryTable td.returnsEvts
+{
+	width: 105px;
+}
+.summaryTable .title{
+	background-color: #E5EFFB;
+	font-size: 12px;
+	line-height: 18px;
+}
+
+.summaryTable .title td{
+	color: #555;
+	padding: 5px 10px;
+	text-align: left;
+	font-weight: bold;
+	border-top:1px solid #C8CCD1;
+}
+
+.summaryTable { margin-bottom: 8px; }
+
+ul.inheritsList
+{
+	list-style: square;
+	margin-left: 20px;
+	padding-left: 0;
+}
+
+.detailList {
+	margin-left: 20px; 
+	line-height: 15px;
+}
+.detailList dt { margin-left: 20px; }
+
+.detailList .heading
+{
+	font-weight: bold;
+	padding-bottom: 6px;
+	margin-left: 0;
+}
+
+ .light a:link, .light a:visited
+{
+	color: #0A8021;
+	font-style: italic;
+}
+
+.fineprint
+{
+	text-align: center;
+	font-size: 12px;
+}
+.class_index{
+	background:url("http://dev.baidu.com/wiki/static/skins/monobook/navbg.png") repeat-x scroll left top transparent;
+#	background-color:#e7f0f5;
+	padding-top: 5px;
+	height: 22px;
+	height:20px \9;
+	padding-top:7px \9;
+	border-bottom:none;
+#	text-transform: lowercase;
+	font-weight: bold;
+	white-space: nowrap;
+	color:#000000;
+	font-size : 120%;
+}
+.class_index1{
+	margin : 8px;
+}
+		</style>
+	</head>
+
+	<body>
+<!-- ============================== header ================================= -->	
+		<!-- begin static/header.html -->
+		<style type="text/css">
+	.wikiClear{ clear:both;height:0; overflow:hidden;}
+	#wiki_header{position:relative;margin:0 auto;height:124px; overflow:hidden; background:#ffffff;}
+	#wiki_login{position:absolute;right:10px;top:5px;}
+	#wiki_login a{line-height:20px;font-size:12px;}
+	#wiki_login span.line{ margin:0 4px; line-height:20px; color:#999;font-size:12px;}
+	#wiki_nav ul{margin:0;}
+	#wiki_nav{background:url(http://dev.baidu.com/wiki/static/skins/monobook/apinav.png) repeat-x;height:42px;padding-bottom:3px;}
+	#wiki_nav li{float:left;height:42px;font-size:14px;text-align:center; margin:0 1px;}
+	#wiki_nav li a{color:#fff; line-height:40px; text-decoration:none; float:left; cursor:pointer;}
+	#wiki_nav li .down{font-size:7px; vertical-align:3px;}
+	#wiki_nav li.nav_sel .bg_l{background:url(http://dev.baidu.com/wiki/static/skins/monobook/apinavbg.png) 0 -42px no-repeat; float:left;}
+	#wiki_nav li .bg_l{height:42px;float:left; }
+	#wiki_nav li.nav_sel .bg_r{background:url(http://dev.baidu.com/wiki/static/skins/monobook/apinavbg.png) right 0 no-repeat;float:left;}
+	#wiki_nav li span span{ margin-left:9px; padding-left:4px;padding-right:13px;float:left;}
+	#wiki_nav li .bg_r{height:38px;text-align:center;line-height:38px; padding-top:5px;color:#fff;float:left;}
+	#wiki_logo{width:960px;height:52px;padding:14px 0; margin:0 auto;position:relative;}
+	#otherApi{ position:absolute;left:280px;top:40px;font-size:13px;}
+	#otherApi .down{font-size:7px; margin-left:3px;vertical-align:1px;-webkit-text-size-adjust:none;}
+	#wiki_nav_c{ width:960px; margin:0 auto;}
+	#otherApiBox{width:152px; height:178px; position:absolute; display:none; z-index:99999;}
+	#otherApiBox .bg{border:1px solid #c9d1d6; background:#fff;filter: alpha(opacity=96);opacity:.9; position:absolute;top:0;left:0;width:150px; height:176px;}
+	#otherApiBox .conn{ position:absolute; top:0;left:0; padding:15px;}
+	#otherApiBox .conn .tit{font-weight:bold; color:#005baa; margin:5px 0 8px;}
+	#otherApiBox .more{ font-family:"宋体"; margin-left:2px;}
+	#otherApiBox .conn .tit .down{font-size:7px; margin-left:3px;vertical-align:1px;-webkit-text-size-adjust:none; }
+	#otherApiBox .conn td,#otherApiBox .conn th{ line-height:18px;vertical-align:top;}
+	#otherApiBox .conn th{font-weight:bold;color:#005baa}
+	ul {line-height: 1.5em;	list-style-type: none;padding: 0;}
+	ol {line-height: 1.5em;margin: .3em 0 0 0 !important;padding: 0;list-style-image: none;list-style:lower-roman;}
+</style>
+
+<script> 
+var skin="monobook",
+stylepath="/wiki/static/skins",
+wgUrlProtocols="http\\:\\/\\/|https\\:\\/\\/|ftp\\:\\/\\/|irc\\:\\/\\/|gopher\\:\\/\\/|telnet\\:\\/\\/|nntp\\:\\/\\/|worldwind\\:\\/\\/|mailto\\:|news\\:|svn\\:\\/\\/",
+wgArticlePath="/wiki/map/index.php?title=$1",
+wgScriptPath="/wiki/map",
+wgScriptExtension=".php",
+wgScript="/wiki/map/index.php",
+wgVariantArticlePath=false,
+wgActionPaths={},
+wgServer="http://dev.baidu.com",
+wgCanonicalNamespace="",
+wgCanonicalSpecialPageName=false,
+wgNamespaceNumber=0,
+wgPageName="首页",
+wgTitle="首页",
+wgAction="view",
+wgArticleId=1,
+wgIsArticle=true,
+wgUserName="Map",
+wgUserGroups=["bureaucrat", "sysop", "*", "user", "autoconfirmed"],
+wgUserLanguage="zh-hans",
+wgContentLanguage="zh-hans",
+wgBreakFrames=false,
+wgCurRevisionId=837,
+wgVersion="1.16.2",
+wgEnableAPI=true,
+wgEnableWriteAPI=true,
+wgSeparatorTransformTable=["", ""],
+wgDigitTransformTable=["", ""],
+wgMainPageTitle="首页",
+wgFormattedNamespaces={"-2": "媒体", "-1": "特殊", "0": "", "1": "讨论", "2": "用户", "3": "用户讨论", "4": "地图开放平台", "5": "地图开放平台讨论", "6": "文件", "7": "文件讨论", "8": "MediaWiki", "9": "MediaWiki讨论", "10": "模板", "11": "模板讨论", "12": "帮助", "13": "帮助讨论", "14": "分类", "15": "分类讨论"},
+wgNamespaceIds={"媒体": -2, "特殊": -1, "": 0, "讨论": 1, "用户": 2, "用户讨论": 3, "地图开放平台": 4, "地图开放平台讨论": 5, "文件": 6, "文件讨论": 7, "mediawiki": 8, "mediawiki讨论": 9, "模板": 10, "模板讨论": 11, "帮助": 12, "帮助讨论": 13, "分类": 14, "分类讨论": 15, "对话": 1, "用户对话": 3, "图像": 6, "档案": 6, "image": 6, "image_talk": 7, "图像对话": 7, "图像讨论": 7, "档案对话": 7, "档案讨论": 7, "文件对话": 7, "模板对话": 11, "帮助对话": 13, "分类对话": 15},
+wgSiteName="地图开放平台",
+wgCategories=[],
+wgRestrictionEdit=[],
+wgRestrictionMove=[],
+wgAjaxWatch={"watchMsg": "监视", "unwatchMsg": "取消监视", "watchingMsg": "监视……", "unwatchingMsg": "解除监视……", "tooltip-ca-watchMsg": "将此页面加入监视列表", "tooltip-ca-unwatchMsg": "将此页面从监视列表中移去"},
+wgFCKEditorDir="extensions/FCKeditor/fckeditor/",
+wgFCKEditorExtDir="extensions/FCKeditor",
+wgFCKEditorToolbarSet="Wiki",
+wgFCKEditorHeight="0";
+</script>
+<!--<script src="http://dev.baidu.com/wiki/static/skins/common/wikibits.js?104"></script> -->
+<script>
+var twonav="mapnav_javascript";
+    mnav({
+    one_nav:"mapnav_product",
+    two_nav:twonav
+});
+
+</script>
+		<!-- end static/header.html -->
+
+<!-- ============================== classes index ============================ -->
+		<div id = "main_content" class = "main_content"> 
+<div class = "mbread clearfix" id = "bread_nav" style = "color:#000000;padding-top:10px;padding-bottom:15px;font-family:sans-serif;" > </div>
+<script type="text/javascript">
+
+var href="http://developer.baidu.com/map/library.htm";
+document.getElementById('bread_nav').innerHTML = ' <a href="#">您当前的位置</a>：<a href="' + href + '">' + 'JavaScript 开源库' + '</a>><a href="#">类参考</a>';
+</script>
+		<div id="index">
+			<!-- begin publish.classesIndex -->
+			<div align="center" class="class_index"><a href="../help.html">参考类</a>
+  |  <a href="../files.html">文件</a></div>
+<div class="class_index1">
+<h2>Classes</h2>
+<ul class="classList">
+	
+	<li><i id='Global_LI'><a href="../symbols/_global_.html">_global_</a></i></li>
+	
+	<li><a href="../symbols/BMapLib.html">BMapLib</a></li>
+	
+	<li><a href="../symbols/BMapLib.DrawingManager.html">BMapLib.DrawingManager</a></li>
+	
+</ul>
+</div>
+			<!-- end publish.classesIndex -->
+		</div>
+		
+		<div id="content">
+<!-- ============================== class title ============================ -->
+			<h1 class="classTitle">
+				
+				类 BMapLib.DrawingManager
+			</h1>
+
+<!-- ============================== class summary ========================== -->			
+			<p class="description">
+				
+				
+			
+				鼠标绘制管理类，实现鼠标绘制管理的<b>入口</b>。
+实例化该类后，即可调用该类提供的open
+方法开启绘制模式状态。
+也可加入工具栏进行选择操作。
+				
+				
+					<br /><i>源文件: </i> <a href="../symbols/src/BMapLib_DrawingManager.js.html">DrawingManager.js</a>.
+				
+			</p>
+
+<!-- ============================== constructor summary ==================== -->			
+			
+			<h1 class="classTitle2">类</h2>
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class BMapLib.DrawingManager.">
+				<tr class="title">
+						<td style="border-left:1px solid #C8CCD1;">类</td>
+						<td>描述</td>
+				</tr>
+				<tbody>
+					<tr>
+						<td class="attributes attributesCstor">
+							<div class="fixedFont">
+								<b><a href="../symbols/BMapLib.DrawingManager.html#constructor">BMapLib.DrawingManager</a></b>(map, opts)
+							</div>
+						</td>
+						<td class="nameDescription" >						
+							<div class="description">DrawingManager类的构造函数</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+
+<!-- ============================== properties summary ===================== -->
+			
+
+<!-- ============================== methods summary ======================== -->
+			
+				<h1 class="classTitle2">方法</h2>
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class BMapLib.DrawingManager.">
+					
+					<tr class="title">
+						<td style="border-left:1px solid #C8CCD1;">方法</td>
+						<td>返回值</td>
+						<td>描述</td>
+					</tr>
+					<tbody>
+					
+					
+					    
+					    
+						<tr>
+					    
+							<td class="attributes ">
+								<div class="fixedFont"><b><a href="../symbols/BMapLib.DrawingManager.html#close">close</a></b>()
+								</div>
+							</td>
+							<td class="returns">
+								<div class="fixedFont">
+																
+								</div>
+							</td>
+							<td class="nameDescription">								
+								<div class="description">关闭地图的绘制状态</div>
+							</td>
+						</tr>
+						
+					
+					    
+						<tr class="darkBgdTr">
+					    
+					    
+							<td class="attributes ">
+								<div class="fixedFont"><b><a href="../symbols/BMapLib.DrawingManager.html#disableCalculate">disableCalculate</a></b>()
+								</div>
+							</td>
+							<td class="returns">
+								<div class="fixedFont">
+																
+								</div>
+							</td>
+							<td class="nameDescription">								
+								<div class="description">关闭距离或面积计算</div>
+							</td>
+						</tr>
+						
+					
+					    
+					    
+						<tr>
+					    
+							<td class="attributes ">
+								<div class="fixedFont"><b><a href="../symbols/BMapLib.DrawingManager.html#enableCalculate">enableCalculate</a></b>()
+								</div>
+							</td>
+							<td class="returns">
+								<div class="fixedFont">
+																
+								</div>
+							</td>
+							<td class="nameDescription">								
+								<div class="description">打开距离或面积计算</div>
+							</td>
+						</tr>
+						
+					
+					    
+						<tr class="darkBgdTr">
+					    
+					    
+							<td class="attributes ">
+								<div class="fixedFont"><b><a href="../symbols/BMapLib.DrawingManager.html#getDrawingMode">getDrawingMode</a></b>()
+								</div>
+							</td>
+							<td class="returns">
+								<div class="fixedFont">
+									
+										DrawingType
+																
+								</div>
+							</td>
+							<td class="nameDescription">								
+								<div class="description">获取当前的绘制模式</div>
+							</td>
+						</tr>
+						
+					
+					    
+					    
+						<tr>
+					    
+							<td class="attributes ">
+								<div class="fixedFont"><b><a href="../symbols/BMapLib.DrawingManager.html#open">open</a></b>()
+								</div>
+							</td>
+							<td class="returns">
+								<div class="fixedFont">
+																
+								</div>
+							</td>
+							<td class="nameDescription">								
+								<div class="description">开启地图的绘制模式</div>
+							</td>
+						</tr>
+						
+					
+					    
+						<tr class="darkBgdTr">
+					    
+					    
+							<td class="attributes ">
+								<div class="fixedFont"><b><a href="../symbols/BMapLib.DrawingManager.html#setDrawingMode">setDrawingMode</a></b>(DrawingType)
+								</div>
+							</td>
+							<td class="returns">
+								<div class="fixedFont">
+									
+										Boolean
+																
+								</div>
+							</td>
+							<td class="nameDescription">								
+								<div class="description">设置当前的绘制模式，参数DrawingType，为5个可选常量:
+<br/>BMAP_DRAWING_MARKER    画点
+<br/>BMAP_DRAWING_CIRCLE    画圆
+<br/>BMAP_DRAWING_POLYLINE  画线
+<br/>BMAP_DRAWING_POLYGON   画多边形
+<br/>BMAP_DRAWING_RECTANGLE 画矩形</div>
+							</td>
+						</tr>
+						
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
+<!-- ============================== events summary ======================== -->
+			
+				<h1 class="classTitle2">事件</h2>
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the events documented in the class BMapLib.DrawingManager.">
+					
+					<tr class="title">
+						<td style="border-left:1px solid #C8CCD1;">事件</td>
+						<td>参数</td>
+						<td>描述</td>
+					</tr>
+					<tbody>
+					
+					
+						   
+						    
+							<tr>
+						    
+							<td class="attributes attributesEvts">
+								<div class="fixedFont"><b><a href="../symbols/BMapLib.DrawingManager.html#event:circlecomplete">circlecomplete</a></b>(overlay)
+								</div>
+							</td>
+							<td class="returns returnsEvts">
+								<div class="fixedFont">
+									
+										{Circle}
+																
+								</div>
+							</td>
+							<td class="nameDescription">								
+								<div class="description">绘制圆完成后，派发的事件接口</div>
+							</td>
+						</tr>
+						
+					
+						   
+							<tr class="darkBgdTr">
+						    
+						    
+							<td class="attributes attributesEvts">
+								<div class="fixedFont"><b><a href="../symbols/BMapLib.DrawingManager.html#event:markercomplete">markercomplete</a></b>(overlay)
+								</div>
+							</td>
+							<td class="returns returnsEvts">
+								<div class="fixedFont">
+									
+										{Marker}
+																
+								</div>
+							</td>
+							<td class="nameDescription">								
+								<div class="description">绘制点完成后，派发的事件接口</div>
+							</td>
+						</tr>
+						
+					
+						   
+						    
+							<tr>
+						    
+							<td class="attributes attributesEvts">
+								<div class="fixedFont"><b><a href="../symbols/BMapLib.DrawingManager.html#event:overlaycomplete">overlaycomplete</a></b>(e)
+								</div>
+							</td>
+							<td class="returns returnsEvts">
+								<div class="fixedFont">
+									
+										{Event Object}
+																
+								</div>
+							</td>
+							<td class="nameDescription">								
+								<div class="description">鼠标绘制完成后，派发总事件的接口</div>
+							</td>
+						</tr>
+						
+					
+						   
+							<tr class="darkBgdTr">
+						    
+						    
+							<td class="attributes attributesEvts">
+								<div class="fixedFont"><b><a href="../symbols/BMapLib.DrawingManager.html#event:polygoncomplete">polygoncomplete</a></b>(overlay)
+								</div>
+							</td>
+							<td class="returns returnsEvts">
+								<div class="fixedFont">
+									
+										{Polygon}
+																
+								</div>
+							</td>
+							<td class="nameDescription">								
+								<div class="description">绘制多边形完成后，派发的事件接口</div>
+							</td>
+						</tr>
+						
+					
+						   
+						    
+							<tr>
+						    
+							<td class="attributes attributesEvts">
+								<div class="fixedFont"><b><a href="../symbols/BMapLib.DrawingManager.html#event:polylinecomplete">polylinecomplete</a></b>(overlay)
+								</div>
+							</td>
+							<td class="returns returnsEvts">
+								<div class="fixedFont">
+									
+										{Polyline}
+																
+								</div>
+							</td>
+							<td class="nameDescription">								
+								<div class="description">绘制线完成后，派发的事件接口</div>
+							</td>
+						</tr>
+						
+					
+						   
+							<tr class="darkBgdTr">
+						    
+						    
+							<td class="attributes attributesEvts">
+								<div class="fixedFont"><b><a href="../symbols/BMapLib.DrawingManager.html#event:rectanglecomplete">rectanglecomplete</a></b>(overlay)
+								</div>
+							</td>
+							<td class="returns returnsEvts">
+								<div class="fixedFont">
+									
+										{Polygon}
+																
+								</div>
+							</td>
+							<td class="nameDescription">								
+								<div class="description">绘制矩形完成后，派发的事件接口</div>
+							</td>
+						</tr>
+						
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
+
+<!-- ============================== constructor details ==================== -->		
+			
+			<div class="details"><a name="constructor"> </a>
+				<div class="sectionTitle">
+					类
+				</div>
+				
+				<div class="fixedFont">
+						<b>BMapLib.DrawingManager</b>(map, opts)
+				</div>
+				
+				<div class="description">
+					DrawingManager类的构造函数
+					
+				</div>
+				
+				
+				
+				<pre class="code"><b>参考示例：</b><br />
+var map = new BMap.Map("container");<br />map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);<br />
+var myDrawingManagerObject = new BMapLib.DrawingManager(map, {isOpen: true, 
+    drawingType: BMAP_DRAWING_MARKER, enableDrawingTool: true,
+    enableCalculate: false,
+    drawingToolOptions: {
+        anchor: BMAP_ANCHOR_TOP_LEFT,
+        offset: new BMap.Size(5, 5),
+        drawingModes : [
+            BMAP_DRAWING_MARKER,
+            BMAP_DRAWING_CIRCLE,
+            BMAP_DRAWING_POLYLINE,
+            BMAP_DRAWING_POLYGON,
+            BMAP_DRAWING_RECTANGLE 
+         ]
+    },
+    polylineOptions: {
+        strokeColor: "#333"
+    });</pre>
+				
+				
+				
+				
+					
+						<dl class="detailList">
+						<dt class="heading">参数:</dt>
+						
+							<dt>
+								<span class="light fixedFont">{Map}</span>  <b>map</b>
+								
+							</dt>
+								<dd>Baidu map的实例对象</dd>
+						
+							<dt>
+								<span class="light fixedFont">{Json Object}</span>  <b>opts</b>
+								
+							</dt>
+								<dd>可选的输入参数，非必填项。可输入选项包括：<br />
+{"<b>isOpen</b>" : {Boolean} 是否开启绘制模式
+<br />"<b>enableDrawingTool</b>" : {Boolean} 是否添加绘制工具栏控件，默认不添加
+<br />"<b>drawingToolOptions</b>" : {Json Object} 可选的输入参数，非必填项。可输入选项包括
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"<b>anchor</b>" : {ControlAnchor} 停靠位置、默认左上角
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"<b>offset</b>" : {Size} 偏移值。
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"<b>scale</b>" : {Number} 工具栏的缩放比例,默认为1
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"<b>drawingModes</b>" : {DrawingType<Array>} 工具栏上可以选择出现的绘制模式,将需要显示的DrawingType以数组型形式传入，如[BMAP_DRAWING_MARKER, BMAP_DRAWING_CIRCLE] 将只显示画点和画圆的选项
+<br />"<b>enableCalculate</b>" : {Boolean} 绘制是否进行测距(画线时候)、测面(画圆、多边形、矩形)
+<br />"<b>markerOptions</b>" : {CircleOptions} 所画的点的可选参数，参考api中的<a href="http://developer.baidu.com/map/reference/index.php?title=Class:%E6%80%BB%E7%B1%BB/%E8%A6%86%E7%9B%96%E7%89%A9%E7%B1%BB">对应类</a>
+<br />"<b>circleOptions</b>" : {CircleOptions} 所画的圆的可选参数，参考api中的<a href="http://developer.baidu.com/map/reference/index.php?title=Class:%E6%80%BB%E7%B1%BB/%E8%A6%86%E7%9B%96%E7%89%A9%E7%B1%BB">对应类</a>
+<br />"<b>polylineOptions</b>" : {CircleOptions} 所画的线的可选参数，参考api中的<a href="http://developer.baidu.com/map/reference/index.php?title=Class:%E6%80%BB%E7%B1%BB/%E8%A6%86%E7%9B%96%E7%89%A9%E7%B1%BB">对应类</a>
+<br />"<b>polygonOptions</b>" : {PolygonOptions} 所画的多边形的可选参数，参考api中的<a href="http://developer.baidu.com/map/reference/index.php?title=Class:%E6%80%BB%E7%B1%BB/%E8%A6%86%E7%9B%96%E7%89%A9%E7%B1%BB">对应类</a>
+<br />"<b>rectangleOptions</b>" : {PolygonOptions} 所画的矩形的可选参数，参考api中的<a href="http://developer.baidu.com/map/reference/index.php?title=Class:%E6%80%BB%E7%B1%BB/%E8%A6%86%E7%9B%96%E7%89%A9%E7%B1%BB">对应类</a></dd>
+						
+						</dl>
+					
+					
+					
+					
+					
+					
+					
+
+			</div>
+			
+
+<!-- ============================== field details ========================== -->		
+			
+
+<!-- ============================== method details ========================= -->		
+			
+				<div class="sectionTitle">
+					方法详述
+				</div>
+				
+					<a name="close"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>close</b>()
+					
+					</div>
+					<div class="description">
+						关闭地图的绘制状态
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code"><b>参考示例：</b><br />
+myDrawingManagerObject.close();</pre>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="disableCalculate"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>disableCalculate</b>()
+					
+					</div>
+					<div class="description">
+						关闭距离或面积计算
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code"><b>参考示例：</b><br />
+myDrawingManagerObject.disableCalculate();</pre>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="enableCalculate"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>enableCalculate</b>()
+					
+					</div>
+					<div class="description">
+						打开距离或面积计算
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code"><b>参考示例：</b><br />
+myDrawingManagerObject.enableCalculate();</pre>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="getDrawingMode"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{DrawingType}</span>
+					<b>getDrawingMode</b>()
+					
+					</div>
+					<div class="description">
+						获取当前的绘制模式
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code"><b>参考示例：</b><br />
+alert(myDrawingManagerObject.getDrawingMode());</pre>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">返回值:</dt>
+							
+								<dd><span class="light fixedFont">{DrawingType}</span> 绘制的模式</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="open"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>open</b>()
+					
+					</div>
+					<div class="description">
+						开启地图的绘制模式
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code"><b>参考示例：</b><br />
+myDrawingManagerObject.open();</pre>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="setDrawingMode"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Boolean}</span>
+					<b>setDrawingMode</b>(DrawingType)
+					
+					</div>
+					<div class="description">
+						设置当前的绘制模式，参数DrawingType，为5个可选常量:
+<br/>BMAP_DRAWING_MARKER    画点
+<br/>BMAP_DRAWING_CIRCLE    画圆
+<br/>BMAP_DRAWING_POLYLINE  画线
+<br/>BMAP_DRAWING_POLYGON   画多边形
+<br/>BMAP_DRAWING_RECTANGLE 画矩形
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code"><b>参考示例：</b><br />
+myDrawingManagerObject.setDrawingMode(BMAP_DRAWING_POLYLINE);</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">参数:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{DrawingType}</span> <b>DrawingType</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">返回值:</dt>
+							
+								<dd><span class="light fixedFont">{Boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					
+				
+			
+			
+<!-- ============================== event details ========================= -->		
+			
+				<div class="sectionTitle">
+					事件详述
+				</div>
+				
+					<a name="event:circlecomplete"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>circlecomplete</b>(overlay)
+					
+					</div>
+					<div class="description">
+						绘制圆完成后，派发的事件接口
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">参数:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Circle}</span> <b>overlay</b>
+									
+								</dt>
+								<dd>回调函数会返回相应的覆盖物，
+<br />{"<b>overlay</b> : {Circle}</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="event:markercomplete"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>markercomplete</b>(overlay)
+					
+					</div>
+					<div class="description">
+						绘制点完成后，派发的事件接口
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code"><b>参考示例：</b>
+myDrawingManagerObject.addEventListener("circlecomplete", function(e, overlay) {
+    alert(overlay);
+});</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">参数:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Marker}</span> <b>overlay</b>
+									
+								</dt>
+								<dd>回调函数会返回相应的覆盖物，
+<br />{"<b>overlay</b> : {Marker}</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="event:overlaycomplete"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>overlaycomplete</b>(e)
+					
+					</div>
+					<div class="description">
+						鼠标绘制完成后，派发总事件的接口
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code"><b>参考示例：</b>
+myDrawingManagerObject.addEventListener("overlaycomplete", function(e) {
+    alert(e.drawingMode);
+    alert(e.overlay);
+    alert(e.calculate);
+    alert(e.label);
+});</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">参数:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Event Object}</span> <b>e</b>
+									
+								</dt>
+								<dd>回调函数会返回event参数，包括以下返回值：
+<br />{"<b>drawingMode</b> : {DrawingType} 当前的绘制模式
+<br />"<b>overlay</b>：{Marker||Polyline||Polygon||Circle} 对应的绘制模式返回对应的覆盖物
+<br />"<b>calculate</b>：{Number} 需要开启计算模式才会返回这个值，当绘制线的时候返回距离、绘制多边形、圆、矩形时候返回面积，单位为米，
+<br />"<b>label</b>：{Label} 计算面积时候出现在Map上的Label对象</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="event:polygoncomplete"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>polygoncomplete</b>(overlay)
+					
+					</div>
+					<div class="description">
+						绘制多边形完成后，派发的事件接口
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">参数:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Polygon}</span> <b>overlay</b>
+									
+								</dt>
+								<dd>回调函数会返回相应的覆盖物，
+<br />{"<b>overlay</b> : {Polygon}</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="event:polylinecomplete"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>polylinecomplete</b>(overlay)
+					
+					</div>
+					<div class="description">
+						绘制线完成后，派发的事件接口
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">参数:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Polyline}</span> <b>overlay</b>
+									
+								</dt>
+								<dd>回调函数会返回相应的覆盖物，
+<br />{"<b>overlay</b> : {Polyline}</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="event:rectanglecomplete"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>rectanglecomplete</b>(overlay)
+					
+					</div>
+					<div class="description">
+						绘制矩形完成后，派发的事件接口
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">参数:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Polygon}</span> <b>overlay</b>
+									
+								</dt>
+								<dd>回调函数会返回相应的覆盖物，
+<br />{"<b>overlay</b> : {Polygon}</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					
+				
+			
+			
+			<hr />
+		</div>
+		
+		</div>
+		
+
+<!-- ============================== footer ================================= -->
+		<div class="fineprint" style="clear:both">
+		&copy;2014 百度地图API<br />
+			
+		</div>
+        <script>document.getElementById("Global_LI").style.display="none";document.getElementById("Global_LI").parentNode.style.display="none";</script>
+	</body>
+</html>
