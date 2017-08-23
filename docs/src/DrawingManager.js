@@ -746,6 +746,14 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         return this.overlays;
     }
 
+    DrawingManager.prototype.addOverlayData = function(overlay) {
+        return this.overlays.push(overlay);
+    }
+
+    DrawingManager.prototype.setOverlaysData = function(overlays) {
+        return this.overlays = overlays;
+    }
+
     /**
      * 清除指定覆盖物
      */
