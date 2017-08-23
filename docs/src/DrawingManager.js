@@ -875,14 +875,34 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             this._open();
         }
 
-        this.markerOptions    = opts.markerOptions    || {};
-        this.circleOptions    = opts.circleOptions    || {};
-        this.polylineOptions  = opts.polylineOptions  || {};
-        this.polygonOptions   = opts.polygonOptions   || {};
-        this.rectangleOptions = opts.rectangleOptions || {};
+        this.setPolygonOptions(opts.polygonOptions);
+        this.setMarkerOptions(opts.markerOptions);
+        this.setCircleOptions(opts.circleOptions);
+        this.setPolylineOptions(opts.polylineOptions);
+        this.setRectangleOptions(opts.rectangleOptions);
         this.controlButton =  opts.controlButton == "right" ? "right" : "left";
 
-    },
+    }
+
+    DrawingManager.prototype.setPolygonOptions = function(options) {
+        this.polygonOptions = options || {};
+    }
+
+    DrawingManager.prototype.setMarkerOptions = function(options) {
+        this.markerOptions = options || {};
+    }
+
+    DrawingManager.prototype.setCircleOptions = function(options) {
+        this.circleOptions = options || {};
+    }
+
+    DrawingManager.prototype.setPolylineOptions = function(options) {
+        this.polylineOptions = options || {};
+    }
+
+    DrawingManager.prototype.setRectangleOptions = function(options) {
+        this.rectangleOptions = options || {};
+    }
 
     /**
      * 开启地图的绘制状态
