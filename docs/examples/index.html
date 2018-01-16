@@ -30,6 +30,7 @@ li{
 </style>
 <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=1XjLLEhZhQNUzd93EjU5nOGQ"></script>
 <!--加载鼠标绘制工具-->
+<script type="text/javascript" src="../src/gpc.js"></script>
 <script type="text/javascript" src="../src/DrawingManager.js"></script>
 <link rel="stylesheet" href="../src/DrawingManager.css" />
 <!--加载检索信息窗口-->
@@ -116,6 +117,7 @@ li{
     var drawingManager = new BMapLib.DrawingManager(map, {
         isOpen: false, //是否开启绘制模式
         enableSorption: true, // 绘面吸附功能 
+        enableGpc: true, // 打开裁剪面功能
         sorptionDistance: 100, // 可吸附距离，像素单位
         drawingMode: BMAP_DRAWING_POLYGON, //默认的绘制类型
         enableCalculate: false, //是否开启计算模式

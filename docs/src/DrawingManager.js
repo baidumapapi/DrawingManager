@@ -733,10 +733,25 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     }
 
     /**
-     * 打开关闭功能
+     * 关闭吸附功能
      */
     DrawingManager.prototype.disableSorption = function() {
         this._enableSorption = false;
+    }
+
+
+    /**
+     * 打开gpc功能
+     */
+    DrawingManager.prototype.enableGpc = function() {
+        this._enableGpc = true;
+    }
+
+    /**
+     * 关闭gpc功能
+     */
+    DrawingManager.prototype.disableGpc = function() {
+        this._enableGpc = false;
     }
 
     /** 
@@ -896,6 +911,13 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             this.enableSorption();
         } else {
             this.disableSorption();
+        }
+
+        // 是否开启gpc功能
+        if (opts.enableGpc === true) {
+            this.enableGpc();
+        } else {
+            this.disableGpc();
         }
 
         /**
@@ -1187,6 +1209,31 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 points.pop();
             }
             //console.log(points.length);
+            // 裁剪
+            if (me._enableGpc && window.gpcas) {
+                var res = new gpcas.geometry.PolyDefault();
+                for (var i = 0; i < points.length; i++) {
+                    res.addPoint(new gpcas.Point(points[i].lng, points[i].lat));
+                }
+                for (var j = 0; j < me.overlays.length; j++) {
+                    var path = me.overlays[j].getPath();
+                    var target = new gpcas.geometry.PolyDefault();
+                    for (var i = 0; i < path.length; i++) {
+                        target.addPoint(new gpcas.Point(path[i].lng, path[i].lat));
+                    }
+                    var diff = res.difference(target);
+                    var newPoints = diff.getPoints();
+                    var outPoints = [];
+                    for (var i = 0; i < newPoints.length; i++) {
+                        outPoints.push(new BMap.Point(newPoints[i].x, newPoints[i].y));
+                    }
+                    res = new gpcas.geometry.PolyDefault();
+                    for (var i = 0; i < newPoints.length; i++) {
+                        res.addPoint(new gpcas.Point(newPoints[i].x, newPoints[i].y));
+                    }
+                    points = outPoints;
+                }
+            }
             overlay.setPath(points);
             var calculate = me._calculate(overlay, points.pop());
             me.overlays.push(overlay);
