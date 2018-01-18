@@ -943,12 +943,12 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             var drawingTool  = new DrawingTool(this, opts.drawingToolOptions);
             this._drawingTool = drawingTool;
         }
-        map.addControl(this._drawingTool);
+        this._map.addControl(this._drawingTool);
     }
 
     DrawingManager.prototype.disableDrawingTool = function() {
         if (this._drawingTool) {
-            map.removeControl(this._drawingTool);
+            this._map.removeControl(this._drawingTool);
         }
     }
 
