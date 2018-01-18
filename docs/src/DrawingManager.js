@@ -890,9 +890,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
          * 是否添加添加鼠标绘制工具栏面板
          */
         if (opts.enableDrawingTool) {
-            var drawingTool  = new DrawingTool(this, opts.drawingToolOptions);
-            this._drawingTool = drawingTool;
-            map.addControl(drawingTool);
+            this.enableDrawingTool();
         }
 
         if (opts.sorptionDistance !== undefined) {
@@ -937,6 +935,21 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         this.setRectangleOptions(opts.rectangleOptions);
         this.controlButton =  opts.controlButton == "right" ? "right" : "left";
 
+    }
+
+    DrawingManager.prototype.enableDrawingTool = function() {
+        var opts = this._opts;
+        if (!this._drawingTool) {
+            var drawingTool  = new DrawingTool(this, opts.drawingToolOptions);
+            this._drawingTool = drawingTool;
+        }
+        map.addControl(this._drawingTool);
+    }
+
+    DrawingManager.prototype.disableDrawingTool = function() {
+        if (this._drawingTool) {
+            map.removeControl(this._drawingTool);
+        }
     }
 
     DrawingManager.prototype.setSorptionDistance = function(distance) {
