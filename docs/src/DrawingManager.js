@@ -770,16 +770,26 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     }
 
     /**
+     * 清除指定覆盖物数据
+     */
+    DrawingManager.prototype.clearOverlayData = function(overlay) {
+        var map = this._map;
+        for (var i = 0; i < this.overlays.length; i++) {
+            if (this.overlays[i] === overlay) {
+                this.overlays.splice(i, 1);
+                return overlay;
+            }
+        }
+    }
+
+    /**
      * 清除指定覆盖物
      */
     DrawingManager.prototype.clearOverlay = function(overlay) {
         var map = this._map;
-        for (var i = 0; i < this.overlays.length; i++) {
-            if (this.overlays[i] === overlay) {
-                map.removeOverlay(overlay);
-                this.overlays.splice(i, 1);
-                return;
-            }
+        var overlay = this.clearOverlayData(overlay);
+        if (overlay) {
+            map.removeOverlay(overlay);
         }
     }
 
@@ -1223,29 +1233,32 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             }
             //console.log(points.length);
             // 裁剪
-            if (me._enableGpc && window.gpcas) {
-                var res = new gpcas.geometry.PolyDefault();
-                for (var i = 0; i < points.length; i++) {
-                    res.addPoint(new gpcas.Point(points[i].lng, points[i].lat));
+            try {
+                if (me._enableGpc && window.gpcas) {
+                    var res = new gpcas.geometry.PolyDefault();
+                    for (var i = 0; i < points.length; i++) {
+                        res.addPoint(new gpcas.Point(points[i].lng, points[i].lat));
+                    }
+                    for (var j = 0; j < me.overlays.length; j++) {
+                        var path = me.overlays[j].getPath();
+                        var target = new gpcas.geometry.PolyDefault();
+                        for (var i = 0; i < path.length; i++) {
+                            target.addPoint(new gpcas.Point(path[i].lng, path[i].lat));
+                        }
+                        var diff = res.difference(target);
+                        var newPoints = diff.getPoints();
+                        var outPoints = [];
+                        for (var i = 0; i < newPoints.length; i++) {
+                            outPoints.push(new BMap.Point(newPoints[i].x, newPoints[i].y));
+                        }
+                        res = new gpcas.geometry.PolyDefault();
+                        for (var i = 0; i < newPoints.length; i++) {
+                            res.addPoint(new gpcas.Point(newPoints[i].x, newPoints[i].y));
+                        }
+                        points = outPoints;
+                    }
                 }
-                for (var j = 0; j < me.overlays.length; j++) {
-                    var path = me.overlays[j].getPath();
-                    var target = new gpcas.geometry.PolyDefault();
-                    for (var i = 0; i < path.length; i++) {
-                        target.addPoint(new gpcas.Point(path[i].lng, path[i].lat));
-                    }
-                    var diff = res.difference(target);
-                    var newPoints = diff.getPoints();
-                    var outPoints = [];
-                    for (var i = 0; i < newPoints.length; i++) {
-                        outPoints.push(new BMap.Point(newPoints[i].x, newPoints[i].y));
-                    }
-                    res = new gpcas.geometry.PolyDefault();
-                    for (var i = 0; i < newPoints.length; i++) {
-                        res.addPoint(new gpcas.Point(newPoints[i].x, newPoints[i].y));
-                    }
-                    points = outPoints;
-                }
+            } catch(e) {
             }
             overlay.setPath(points);
             var calculate = me._calculate(overlay, points.pop());
