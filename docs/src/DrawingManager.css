@@ -14,7 +14,7 @@
     height:100%;
     width:64px;
     height:100%;
-    background-image:url(http://api.map.baidu.com/library/DrawingManager/1.4/src/bg_drawing_tool.png);
+    background-image:url(//api.map.baidu.com/library/DrawingManager/1.4/src/bg_drawing_tool.png);
     cursor:pointer;
 }
 .BMapLib_Drawing .BMapLib_last{

@@ -1811,7 +1811,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         if (!BMapLib.GeoUtils) {
             var script = document.createElement('script');
             script.setAttribute('type', 'text/javascript');
-            script.setAttribute('src', 'http://huiyan-fe.github.io/BMap-JavaScript-library/src/GeoUtils/GeoUtils.min.js');
+            script.setAttribute('src', '//huiyan-fe.github.io/BMap-JavaScript-library/src/GeoUtils/GeoUtils.min.js');
             document.body.appendChild(script);
         }
 
