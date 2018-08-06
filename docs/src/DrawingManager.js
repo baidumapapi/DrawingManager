@@ -638,6 +638,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         instances.push(this);
 
         opts = opts || {};
+        this.overlays = []; // 用来存储覆盖物
 
         this._initialize(map, opts);
     };
@@ -725,7 +726,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
      */
     DrawingManager.prototype.enableCalculate = function () {
         this._enableCalculate = true;
-        // this._addGeoUtilsLibrary();  // 已经在页面中直接引用，不需要异步调用的过程
+        this._addGeoUtilsLibrary();  // 异步调用GeoUtils
     };
 
     /**
@@ -736,6 +737,85 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
      */
     DrawingManager.prototype.disableCalculate = function () {
         this._enableCalculate = false;
+    };
+
+    /**
+     * 打开吸附功能
+     */
+    DrawingManager.prototype.enableSorption = function() {
+        this._enableSorption = true;
+    };
+
+    /**
+     * 关闭吸附功能
+     */
+    DrawingManager.prototype.disableSorption = function() {
+        this._enableSorption = false;
+    };
+
+
+    /**
+     * 打开gpc功能
+     */
+    DrawingManager.prototype.enableGpc = function() {
+        this._enableGpc = true;
+    };
+
+    /**
+     * 关闭gpc功能
+     */
+    DrawingManager.prototype.disableGpc = function() {
+        this._enableGpc = false;
+    };
+
+    /** 
+     * 获取所有绘制的覆盖物
+     */
+    DrawingManager.prototype.getOverlays = function() {
+        return this.overlays;
+    };
+
+    DrawingManager.prototype.addOverlayData = function(overlay) {
+        return this.overlays.push(overlay);
+    };
+
+    DrawingManager.prototype.setOverlaysData = function(overlays) {
+        return this.overlays = overlays;
+    };
+
+    /**
+     * 清除指定覆盖物数据
+     */
+    DrawingManager.prototype.clearOverlayData = function(overlay) {
+        var map = this._map;
+        for (var i = 0; i < this.overlays.length; i++) {
+            if (this.overlays[i] === overlay) {
+                this.overlays.splice(i, 1);
+                return overlay;
+            }
+        }
+    };
+
+    /**
+     * 清除指定覆盖物
+     */
+    DrawingManager.prototype.clearOverlay = function(overlay) {
+        var map = this._map;
+        var overlay = this.clearOverlayData(overlay);
+        if (overlay) {
+            map.removeOverlay(overlay);
+        }
+    };
+
+    /** 
+     * 清除所有绘制的覆盖物
+     */
+    DrawingManager.prototype.clearOverlays = function() {
+        var map = this._map;
+        this.overlays.forEach(function (overlay) {
+            map.removeOverlay(overlay);
+        });
+        this.overlays.length = 0;
     };
 
     /**
@@ -834,6 +914,13 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
          * 是否添加添加鼠标绘制工具栏面板
          */
         if (opts.enableDrawingTool) {
+            this.enableDrawingTool();
+        }
+
+        if (opts.sorptionDistance !== undefined) {
+            this.setSorptionDistance(opts.sorptionDistance);
+        }
+        if (opts.enableDrawingTool) {
             var drawingTool = new DrawingTool(this, opts.drawingToolOptions);
             this._drawingTool = drawingTool;
             map.addControl(drawingTool);
@@ -842,8 +929,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         // 是否计算绘制出的面积
         if (opts.enableCalculate === true) {
             this.enableCalculate();
-        }
-        else {
+        } else {
             this.disableCalculate();
         }
 
@@ -851,6 +937,20 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         if (opts.enbaleLimit === true) {
             var limit = opts.limitOptions;
             this.limit = limit;
+        }
+
+        // 是否开启吸附功能
+        if (opts.enableSorption === true) {
+            this.enableSorption();
+        } else {
+            this.disableSorption();
+        }
+
+        // 是否开启gpc功能
+        if (opts.enableGpc === true) {
+            this.enableGpc();
+        } else {
+            this.disableGpc();
         }
 
         /**
@@ -863,20 +963,63 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             this._open();
         }
 
-        this.markerOptions = opts.markerOptions || {};
-        this.circleOptions = opts.circleOptions || {};
-        this.polylineOptions = opts.polylineOptions || {};
-        this.polygonOptions = opts.polygonOptions || {};
-        this.rectangleOptions = opts.rectangleOptions || {};
-        this.labelOptions = opts.labelOptions || {};
+        this.setPolygonOptions(opts.polygonOptions);
+        this.setMarkerOptions(opts.markerOptions);
+        this.setCircleOptions(opts.circleOptions);
+        this.setPolylineOptions(opts.polylineOptions);
+        this.setRectangleOptions(opts.rectangleOptions);
+        this.setLabelOptions(opts.labelOptions);
         this.controlButton = opts.controlButton == 'right' ? 'right' : 'left';
 
-    },
+    };
+
+    DrawingManager.prototype.enableDrawingTool = function() {
+        var opts = this._opts;
+        if (!this._drawingTool) {
+            var drawingTool  = new DrawingTool(this, opts.drawingToolOptions);
+            this._drawingTool = drawingTool;
+        }
+        this._map.addControl(this._drawingTool);
+    };
+
+    DrawingManager.prototype.disableDrawingTool = function() {
+        if (this._drawingTool) {
+            this._map.removeControl(this._drawingTool);
+        }
+    };
+
+    DrawingManager.prototype.setSorptionDistance = function(distance) {
+        this._sorptionDistance = distance || 0;
+    };
+
+    DrawingManager.prototype.setPolygonOptions = function(options) {
+        this.polygonOptions = options || {};
+    };
+
+    DrawingManager.prototype.setMarkerOptions = function(options) {
+        this.markerOptions = options || {};
+    };
+
+    DrawingManager.prototype.setCircleOptions = function(options) {
+        this.circleOptions = options || {};
+    };
+
+    DrawingManager.prototype.setPolylineOptions = function(options) {
+        this.polylineOptions = options || {};
+    };
+
+    DrawingManager.prototype.setRectangleOptions = function(options) {
+        this.rectangleOptions = options || {};
+    };
+
+    DrawingManager.prototype.setLabelOptions = function(options) {
+        this.labelOptions = options || {};
+    };
 
     /**
-         * 开启地图的绘制状态
-         * @return {Boolean}，开启绘制状态成功，返回true；否则返回false。
-         */
+     * 开启地图的绘制状态
+     * @return {Boolean}，开启绘制状态成功，返回true；否则返回false。
+     */
     DrawingManager.prototype._open = function () {
 
         this._isOpen = true;
@@ -1000,8 +1143,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             strokeWeight: 2 // 边线的宽度，以像素为单位。
         };
 
-        var centerIcon = new BMap.Icon(__uri('../images/circenter.png'), new BMap.Size(20, 20));
-        var shadow = new BMap.Icon(__uri('../images/maker-shadow.png'), new BMap.Size(21, 33));
+        var centerIcon = new BMap.Icon('./images/circenter.png', new BMap.Size(20, 20));
+        var shadow = new BMap.Icon('./images/maker-shadow.png', new BMap.Size(21, 33));
 
         /**
          * 开始绘制圆形
@@ -1063,7 +1206,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             mask.hide();
 
             moveMarker = new BMap.Marker(endPoint);
-            var moveIcon = new BMap.Icon(__uri('../images/nbsearch2.png'), new BMap.Size(40, 20));
+            var moveIcon = new BMap.Icon('./images/nbsearch2.png', new BMap.Size(40, 20));
             moveIcon.setImageSize(new BMap.Size(40, 40));
             moveIcon.setImageOffset(new BMap.Size(0, -10));
             moveMarker.setIcon(moveIcon);
@@ -1207,6 +1350,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             points = [], // 用户绘制的点
             drawPoint = null, // 实际需要画在地图上的点
             overlay = null,
+            match = null,
             isBinded = false;
 
         function getNorthEast() {
@@ -1230,25 +1374,28 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 return;
             }
 
-            points.push(e.point);
+            var point = e.point;
+            if (match) {
+                point = match;
+            }
+            points.push(point);
             drawPoint = points.concat(points[points.length - 1]);
             if (points.length == 1) {
                 if (me._drawingType == BMAP_DRAWING_POLYLINE) {
 
                     overlay = new BMap.Polyline(drawPoint, me.polylineOptions);
-                }
-                else if (me._drawingType == BMAP_DRAWING_POLYGON) {
+                } else if (me._drawingType == BMAP_DRAWING_POLYGON) {
                     overlay = new BMap.Polygon(drawPoint, me.polygonOptions);
                 }
 
                 map.addOverlay(overlay);
-            }
-            else {
+            } else {
                 overlay.setPath(drawPoint);
             }
             if (!isBinded) {
                 isBinded = true;
                 mask.enableEdgeMove();
+                mask.removeEventListener('mousemove', mousemoveAction);
                 mask.addEventListener('mousemove', moveAction);
                 mask.addEventListener('dblclick', dblclickAction);
             }
@@ -1259,7 +1406,19 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
          * 鼠标移动过程的事件
          */
         var moveAction = function (e) {
+            var point = e.point;
+            if (me._enableSorption) {
+                var matchs = me.getSorptionMatch(point, me.overlays, me._sorptionDistance);
+                if (matchs && matchs.length > 0) {
+                    match = matchs[0].point;
+                    overlay.setPositionAt(drawPoint.length - 1, matchs[0].point);
+                    return;
+                }
+            }
+            match = null;
+
             overlay.setPositionAt(drawPoint.length - 1, e.point);
+
             map.removeOverlay(tip_label);
 
             tip_label = new BMap.Label('单击绘制下一个点，双击完成绘制', {
@@ -1278,14 +1437,45 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             isBinded = false;
             map.removeOverlay(tip_label);
             mask.disableEdgeMove();
+            mask.removeEventListener('mousedown',startAction);
             mask.removeEventListener('mousemove', moveAction);
             mask.removeEventListener('mousemove', mousemoveAction);
             mask.removeEventListener('dblclick', dblclickAction);
             if (me.controlButton == 'right') {
                 points.push(e.point);
-            }
-            else {
+            } else if (baidu.ie <= 8) {
+                
+            } else {
                 points.pop();
+            }
+
+            // 裁剪
+            try {
+                if (me._enableGpc && window.gpcas) {
+                    var res = new gpcas.geometry.PolyDefault();
+                    for (var i = 0; i < points.length; i++) {
+                        res.addPoint(new gpcas.Point(points[i].lng, points[i].lat));
+                    }
+                    for (var j = 0; j < me.overlays.length; j++) {
+                        var path = me.overlays[j].getPath();
+                        var target = new gpcas.geometry.PolyDefault();
+                        for (var i = 0; i < path.length; i++) {
+                            target.addPoint(new gpcas.Point(path[i].lng, path[i].lat));
+                        }
+                        var diff = res.difference(target);
+                        var newPoints = diff.getPoints();
+                        var outPoints = [];
+                        for (var i = 0; i < newPoints.length; i++) {
+                            outPoints.push(new BMap.Point(newPoints[i].x, newPoints[i].y));
+                        }
+                        res = new gpcas.geometry.PolyDefault();
+                        for (var i = 0; i < newPoints.length; i++) {
+                            res.addPoint(new gpcas.Point(newPoints[i].x, newPoints[i].y));
+                        }
+                        points = outPoints;
+                    }
+                }
+            } catch(e) {
             }
 
             overlay.setPath(points);
@@ -1391,8 +1581,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             return output;
         }
 
-        var moveIcon = new BMap.Icon(__uri('../images/bullet2.png'), new BMap.Size(10, 10));
-        var shadow = new BMap.Icon(__uri('../images/maker-shadow.png'), new BMap.Size(20, 20));
+        var moveIcon = new BMap.Icon('./images/bullet2.png', new BMap.Size(10, 10));
+        var shadow = new BMap.Icon('./images/maker-shadow.png', new BMap.Size(20, 20));
         moveIcon.setImageSize(new BMap.Size(10, 10));
 
         /**
@@ -1599,8 +1789,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             // 异常情况处理
             if (!result.data || result.data < 0) {
                 result.data = 0;
-            }
-            else {
+            } else {
                 // 保留2位小数位
                 result.data = result.data.toFixed(2);
             }
@@ -1622,7 +1811,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         if (!BMapLib.GeoUtils) {
             var script = document.createElement('script');
             script.setAttribute('type', 'text/javascript');
-            script.setAttribute('src', 'http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils_min.js');
+            script.setAttribute('src', 'http://huiyan-fe.github.io/BMap-JavaScript-library/src/GeoUtils/GeoUtils.min.js');
             document.body.appendChild(script);
         }
 
@@ -1672,6 +1861,57 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         this.dispatchEvent('overlaycomplete', options);
     };
 
+    // 判断吸附算法
+    DrawingManager.prototype.getSorptionMatch = function (point, polygons, distance) {
+        distance = distance || 20;
+        var map = this._map;
+        var P = map.pointToPixel(point); // point.pixel;
+        var match = [];
+        for (var j = 0; j < polygons.length; j++) {
+            var pixels = polygons[j].getPath();
+            var first = pixels[0];
+            var last = pixels[pixels.length - 1];
+            if (!first.equals(last)) {
+                pixels.push(pixels[0]);
+            }
+            for (var i = 1; i < pixels.length; i++) {
+                var A = map.pointToPixel(pixels[i - 1]);
+                var B = map.pointToPixel(pixels[i]);
+                var vAP = [P.x - A.x, P.y - A.y];
+                var vAB = [B.x - A.x, B.y - A.y];
+                var vPB = [B.x - P.x, B.y - P.y];
+                var cAPAB = vAP[0] * vAB[0] + vAP[1] * vAB[1];
+                var lAPAB = Math.sqrt(Math.pow(vAP[0], 2) + Math.pow(vAP[1], 2)) * Math.sqrt(Math.pow(vAB[0], 2) + Math.pow(vAB[1], 2));
+                var rPAB = Math.acos(cAPAB / lAPAB);
+                var cABPB = vAB[0] * vPB[0] + vAB[1] * vPB[1];
+                var lABPB = Math.sqrt(Math.pow(vAB[0], 2) + Math.pow(vAB[1], 2)) * Math.sqrt(Math.pow(vPB[0], 2) + Math.pow(vPB[1], 2));
+                var rPBA = Math.acos(cABPB / lABPB);
+                if (rPAB < Math.PI / 2 && rPBA < Math.PI / 2) {
+                    var lAP = Math.sqrt(Math.pow(vAP[0], 2) + Math.pow(vAP[1], 2));
+                    var lAB = Math.sqrt(Math.pow(vAB[0], 2) + Math.pow(vAB[1], 2));
+                    var lAO = Math.cos(rPAB) * lAP;
+                    var pAOAB = lAO / lAB;
+                    var lPO = Math.sin(rPAB) * lAP;
+                    var O = [A.x + vAB[0] * pAOAB, A.y + vAB[1] * pAOAB];
+                    if (lPO < distance) {
+                        match.push({
+                            point: map.pixelToPoint({
+                                x: O[0],
+                                y: O[1]
+                            }),
+                            length: lPO
+                        });
+                    }
+                }
+            }
+        }
+        match.sort(function (a, b) {
+            return a.length - b.length;
+        });
+        var ret = match.length > 0 ? match : null;
+        return ret;
+    }
+
     // 确认,取消操作覆盖物
     function Operate(data, DrawingManager) {
         this.limit = data.limit;
@@ -1719,6 +1959,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             }
             else if (that.type == 'polygon') {
                 var calculate = that.DrawingManager._calculate(overlay, (overlay.getPath()));
+                that.DrawingManager.overlays.push(overlay);
                 overlay.disableEditing();
             }
 
@@ -1729,8 +1970,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                     for (var k in overlays[i]) {
                         map.removeOverlay(overlays[i][k]);
                     }
-                }
-                else {
+                } else {
                     map.removeOverlay(overlays[i]);
                 }
             }
@@ -1743,8 +1983,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                     for (var k in overlays[i]) {
                         map.removeOverlay(overlays[i][k]);
                     }
-                }
-                else {
+                } else {
                     map.removeOverlay(overlays[i]);
                 }
             }
@@ -2115,13 +2354,11 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                     if (!lastClickXY || !(Math.abs(nowXY.x - lastClickXY.x) < 5 && Math.abs(nowXY.y - lastClickXY.y) < 5)) {
                         dispatchEvent('click');
                         lastClickXY = getXYbyEvent(e);
-                    }
-                    else {
+                    } else {
                         lastClickXY = null;
                     }
                 }
-            }
-            else {
+            } else {
                 dispatchEvent(type);
             }
         };
@@ -2195,8 +2432,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                     });
                 }, 30);
             }
-        }
-        else {
+        } else {
             if (this._edgeMoveTimer) {
                 clearInterval(this._edgeMoveTimer);
                 this._edgeMoveTimer = null;
@@ -2269,8 +2505,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         // 工具栏可显示的绘制模式
         if (drawingToolOptions.drawingModes) {
             this.drawingModes = drawingToolOptions.drawingModes;
-        }
-        else {
+        } else {
             this.drawingModes = this.defaultDrawingModes;
         }
 
@@ -2310,14 +2545,15 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         var tip = this.tip = document.createElement('div');
         tip.className = 'BMapLib_tip';
         tip.innerHTML = '<p class="BMapLib_tip_title"></p><p class="BMapLib_tip_text"></p>';
-        panel.appendChild(tip);
+        if (this.drawingToolOptions.enableTips === true) {
+            panel.appendChild(tip);
+        }
         // 绑定事件
         this._bind(panel);
         // 添加DOM元素到地图中
         if (this.drawingToolOptions.customContainer) {
             baidu.g(this.drawingToolOptions.customContainer).appendChild(container);
-        }
-        else {
+        } else {
             map.getContainer().appendChild(container);
         }
         // 将DOM元素返回
@@ -2348,8 +2584,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 if (drawingType === 'hander') {
                     that.tip.children[0].innerText = title;
                     that.tip.children[1].innerText = '使用鼠标拖动地图';
-                }
-                else {
+                } else {
                     that.tip.className += ' ' + drawingType;
                     that.tip.children[0].innerText = title;
                     that.tip.children[1].innerText = '使用' + title + '选出目标区域';
@@ -2442,8 +2677,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 }
 
                 box.className = classStr;
-            }
-            else {
+            } else {
                 box.className = box.className.replace(/_hover/, '');
             }
         }
@@ -2469,8 +2703,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         if (drawingManager._isOpen && drawingManager.getDrawingMode() === drawingType) {
             drawingManager.close();
             drawingManager._map.enableDoubleClickZoom();
-        }
-        else {
+        } else {
             drawingManager.setDrawingMode(drawingType);
             drawingManager.open();
             drawingManager._map.disableDoubleClickZoom();
