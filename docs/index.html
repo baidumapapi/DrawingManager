@@ -64,12 +64,12 @@
                     , BMAP_DRAWING_CIRCLE
                 ]
             },
-            enableSorption: true,
-            sorptionDistance: 20,
-            enableGpc: true,
+            enableSorption: true, // 是否开启边界吸附功能
+            sorptionDistance: 20, // 边界吸附距离
+            enableGpc: true, // 是否开启延边裁剪功能
             enbaleLimit: true,  // 是否开启超限提示
             limitOptions: {
-                area: 50000000
+                area: 50000000 // 面积超限值
             },
             circleOptions: styleOptions, // 圆的样式
             polylineOptions: styleOptions, // 线的样式
